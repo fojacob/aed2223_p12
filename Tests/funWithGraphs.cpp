@@ -63,7 +63,38 @@ Graph FunWithGraphs::graph3() {
 // ----------------------------------------------------------
 // TODO
 int FunWithGraphs::maze(int rows, int cols, string m[]) {
-    return 0;
+    bool visited[rows][cols];
+    int distance[rows][cols];
+    queue<pair<int,int>> q;
+    int ty, tx;
+    for(int i=0; i<rows; i++){
+        for(int j=0; j<cols; j++){
+            visited[i][j] = false;
+            if(m[i][j] == 'P'){
+                visited[i][j] = true;
+                distance[i][j] = 0;
+                q.emplace(i,j);
+            }
+            else if (m[i][j] == 'T'){
+                ty = i;
+                tx = j;
+            }
+        }
+    }
+    int ndirs = 4, incx[] = {0,0,-1,+1}, incy[] = {-1, 1,0,0};
+    while(!q.empty()){
+        auto u = q.front(); q.pop();
+        for(int i=0; i<ndirs; i++){
+            int ny = u.first + incy[i];
+            int nx = u.second + incx[i];
+            if(ny>=0 && ny<rows && nx>=0 && nx<cols && !visited[ny][nx] && m[ny][nx]!='#'){
+                q.emplace(ny,nx);
+                visited[ny][nx] = true;
+                distance[ny][nx] = distance[u.first][u.second] + 1;
+            }
+        }
+    }
+    return distance[ty][tx];
 }
 
 // ----------------------------------------------------------
